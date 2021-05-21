@@ -4,8 +4,8 @@ import time
 import re
 from . import logger
 from .client.qbittorrent import qBittorrent
-from .client.transmission import Transmission
 
+# from .client.transmission import Transmission
 # from .client.utorrent import uTorrent
 # from .client.deluge import Deluge
 from .exception.nosuchclient import NoSuchClient
