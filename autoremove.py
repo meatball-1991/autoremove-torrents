@@ -4,7 +4,7 @@ from flexget.event import event
 
 from .autoremovetorrents.FlexgetExcute import Executor
 
-import json
+# import json
 
 
 class autoremove:
