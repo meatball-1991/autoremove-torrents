@@ -40,9 +40,9 @@ class autoremove:
                 + str(config["qbittorrent"]["port"])
             )
         # json_str = json.dumps(config)
-        with open("./text.txt", "a") as f:
-            # f.write(json_str)
-            f.write(task.name)
+        # with open("./text.txt", "a") as f:
+        # f.write(json_str)
+        # f.write(task.name)
         Executor.autoremove(config)
 
 
