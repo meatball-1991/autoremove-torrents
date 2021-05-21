@@ -1,0 +1,29 @@
+web_server:
+  bind: 0.0.0.0
+  port: 3539
+  web_ui: yes
+
+schedules:
+  - tasks: remove
+    schedule:
+      minute: "*/5"
+
+tasks:
+  remove:
+  disable: [seen, seen_info_hash, retry_failed]
+  no_entries_ok: yes
+  autoremove:
+    #修改了qbittorrent的配置，使得和flexget官方qbittorrent插件一致,方便使用锚点引用
+    qbittorrent:
+      path: /  #没用
+      host: XXX
+      port: XXX
+      use_ssl: True
+      verify_cert: False #没用
+      username: XXX
+      password: XXX    
+    # view: True # view mod设置，默认false
+    # debug: True # debug mod设置，默认false
+    delete_data: true #是否删除数据
+    strategies: # strategies设置格式未改变，参考 https://autoremove-torrents.readthedocs.io/zh_CN/latest/
+      XXXX
