@@ -1,6 +1,0 @@
-test:
-  free_space:
-    min: 0
-    path: .
-    action: remove-big-seeds
-remove:

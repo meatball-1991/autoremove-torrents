@@ -1,6 +1,0 @@
-task:
-  client: transmission
-  host: $(TRANSMISSION_2_8_HOST)
-  password: transmission
-exceptions:
-  - LoginFailure

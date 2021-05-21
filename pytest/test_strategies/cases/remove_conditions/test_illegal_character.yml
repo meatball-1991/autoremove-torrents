@@ -1,4 +1,0 @@
-test:
-  remove: ra@@o < 0.5
-exceptions:
-  - IllegalCharacter

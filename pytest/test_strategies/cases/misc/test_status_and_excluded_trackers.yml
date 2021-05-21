@@ -1,6 +1,0 @@
-test:
-  excluded_trackers:
-    - www.site2.org
-  status:
-    - Queued
-remain:

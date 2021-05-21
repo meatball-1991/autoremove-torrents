@@ -1,5 +1,0 @@
-test:
-  remove: average_uploadspeed < 100
-remove:
-  - Torrent - 1
-  - Torrent - 6

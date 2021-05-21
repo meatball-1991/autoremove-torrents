@@ -1,6 +1,0 @@
-test:
-  free_space:
-    min: 10000
-    path: .
-    action: remove-old-seeds
-remain:

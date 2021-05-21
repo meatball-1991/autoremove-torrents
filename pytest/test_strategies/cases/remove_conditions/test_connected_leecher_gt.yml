@@ -1,4 +1,0 @@
-test:
-  remove: connected_leecher > 100
-remove:
-  - Torrent - 1

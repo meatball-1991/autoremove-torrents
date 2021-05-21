@@ -1,4 +1,0 @@
-test:
-  remove: leecher > 100
-remove:
-  - Torrent - 1

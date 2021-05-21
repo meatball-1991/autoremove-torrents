@@ -1,5 +1,0 @@
-test:
-  seed_size:
-    limit: 1024
-    action: remove-old-seeds
-remove:

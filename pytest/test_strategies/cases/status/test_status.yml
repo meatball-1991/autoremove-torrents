@@ -1,8 +1,0 @@
-test:
-  status:
-    - checking
-    - queued
-    - something_wrong
-remain:
-  - Torrent - 13
-  - Torrent - 14

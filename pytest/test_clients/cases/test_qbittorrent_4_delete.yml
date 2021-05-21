@@ -1,7 +1,0 @@
-task:
-  client: qbittorrent
-  host: $(QBITTORRENT_4_HOST)
-  username: $(QBITTORRENT_4_USERNAME)
-  password: $(QBITTORRENT_4_PASSWORD)
-  force_delete:
-    - a_hash

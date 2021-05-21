@@ -1,6 +1,0 @@
-test:
-  maximum_number:
-    limit: 15
-    action: remove-big-seeds
-remove:
-  - Torrent - 2

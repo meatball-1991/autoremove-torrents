@@ -1,5 +1,0 @@
-test:
-  remove: upload_ratio > 4
-remove:
-  - Torrent - 4
-  - Torrent - 8

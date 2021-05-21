@@ -1,7 +1,0 @@
-task:
-  client: qbittorrent
-  host: $(QBITTORRENT_3_HOST)
-  username: 000
-  password: 000000
-exceptions:
-  - LoginFailure
