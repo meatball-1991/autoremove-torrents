@@ -28,7 +28,7 @@ class Executor:
         # Run autoremove
         try:
             # Show version
-            lg.info("Auto Remove Torrents %s" % __version__)
+            lg.debug("Auto Remove Torrents %s" % __version__)
 
             # Run task
             try:

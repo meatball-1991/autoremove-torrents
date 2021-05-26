@@ -295,7 +295,7 @@ class qBittorrent(object):
     # Get free space
     def remote_free_space(self, path):
         # Actually the path is ignored
-        self._logger.info(
+        self._logger.debug(
             "Get Free Space: The path is ignored "
             + "since qBitorrent does not support to specific a path to check the free space."
         )

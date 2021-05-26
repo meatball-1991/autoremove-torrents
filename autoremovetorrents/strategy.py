@@ -203,18 +203,18 @@ class Strategy(object):
 
     # Execute this strategy
     def execute(self, client_status, torrents):
-        self._logger.info("Running strategy %s..." % self._name)
+        self._logger.debug("Running strategy %s..." % self._name)
         self.remain_list = torrents
         # Apply Filters
         self._apply_filters()
         # Apply Conditions
         self._apply_conditions(client_status)
         # Print remove list
-        self._logger.info(
+        self._logger.debug(
             "Total: %d torrent(s). %d torrent(s) can be removed."
             % (len(self.remain_list) + len(self.remove_list), len(self.remove_list))
         )
         if len(self.remove_list) > 0:
-            self._logger.info("To be deleted:")
+            self._logger.debug("To be deleted:")
             for torrent in self.remove_list:
-                self._logger.info(torrent)
+                self._logger.debug(torrent)

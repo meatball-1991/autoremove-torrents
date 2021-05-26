@@ -88,31 +88,31 @@ class Task(object):
         self._client = clients[self._client_name](self._host)
 
         # Login
-        self._logger.info("Logging in...")
+        self._logger.debug("Logging in...")
         self._client.login(self._username, self._password)
-        self._logger.info(
+        self._logger.debug(
             "Login successfully. The client is %s." % self._client.version()
         )
-        self._logger.info("WebUI API version: %s" % self._client.api_version())
+        self._logger.debug("WebUI API version: %s" % self._client.api_version())
 
         # Get client status
         self._client_status = self._client.client_status()
-        self._logger.info(self._client_status)
+        self._logger.debug(self._client_status)
 
     # Get all the torrents and properties
     def _get_torrents(self):
-        self._logger.info("Getting all the torrents...")
+        self._logger.debug("Getting all the torrents...")
         last_time = time.time()
         for hash_value in self._client.torrents_list():
             # Append new torrent
             self._torrents.add(self._client.torrent_properties(hash_value))
             # For a long waiting
             if time.time() - last_time > 1:
-                self._logger.info(
+                self._logger.debug(
                     "Please wait...We have found %d torrent(s)." % len(self._torrents)
                 )
                 last_time = time.time()
-        self._logger.info("Found %d torrent(s) in the client." % len(self._torrents))
+        self._logger.debug("Found %d torrent(s) in the client." % len(self._torrents))
 
     # Apply strategies
     def _apply_strategies(self):
@@ -132,25 +132,31 @@ class Task(object):
             [hash_ for hash_ in delete_list], self._delete_data
         )
         # Output logs
-        for hash_ in success:
+        if success or failed:  # 如果需要删除种子就详细列出详细情况
             self._logger.info(
-                "The torrent %s and its data have been removed."
-                if self._delete_data
-                else "The torrent %s has been removed.",
-                delete_list[hash_],
+                "%d torrents need to be deleted" % (len(success) + len(failed))
             )
-        for torrent in failed:
-            self._logger.error(
-                "The torrent %s and its data cannot be removed. Reason: %s"
-                if self._delete_data
-                else "The torrent %s cannot be removed. Reason: %s",
-                delete_list[torrent["hash"]],
-                torrent["reason"],
-            )
+            for hash_ in success:
+                self._logger.info(
+                    "The torrent %s and its data have been removed."
+                    if self._delete_data
+                    else "The torrent %s has been removed.",
+                    delete_list[hash_],
+                )
+            for torrent in failed:
+                self._logger.error(
+                    "The torrent %s and its data cannot be removed. Reason: %s"
+                    if self._delete_data
+                    else "The torrent %s cannot be removed. Reason: %s",
+                    delete_list[torrent["hash"]],
+                    torrent["reason"],
+                )
+        else:  # 否则info记录未删除
+            self._logger.info("no torrents need to be deleted")
 
     # Execute
     def execute(self):
-        self._logger.info("Running task '%s'..." % self._name)
+        self._logger.debug("Running task '%s'..." % self._name)
         self._login()
         self._get_torrents()
         self._apply_strategies()
