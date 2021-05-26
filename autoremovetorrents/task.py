@@ -151,8 +151,8 @@ class Task(object):
                     delete_list[torrent["hash"]],
                     torrent["reason"],
                 )
-        else:  # 否则info记录未删除
-            self._logger.info("no torrents need to be deleted")
+        # else:  # 否则info记录未删除
+        #     self._logger.info("no torrents need to be deleted")
 
     # Execute
     def execute(self):
