@@ -20,6 +20,12 @@ class autoremove:
         "additionalProperties": False,
     }
 
+    def on_task_input(self, task, config):
+        pass
+
+    def on_task_filter(self, task, config):
+        pass
+
     def on_task_output(self, task, config):
         config["name"] = task.name
         config["client"] = "qbittorrent"
