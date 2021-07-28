@@ -16,6 +16,7 @@ class autoremove:
             "debug": {"type": "boolean", "default": False},
             "delete_data": {"type": "boolean", "default": False},
             "strategies": {"type": "object", "properties": {}},
+            "manage": {"type": "object", "properties": {}},
         },
         "additionalProperties": False,
     }

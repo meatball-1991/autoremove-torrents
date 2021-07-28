@@ -160,7 +160,6 @@ class Task(object):
         torrents = self._client._request_handler.GetDownloadingTorrents()
         if "SetUpLimit" in self._manage:
             for limit in self._manage["SetUpLimit"]:
-                speed = int(limit) * 1024
                 hashes = []
                 if not isinstance(self._manage["SetUpLimit"][limit], list):
                     self._manage["SetUpLimit"][limit] = [
@@ -172,8 +171,10 @@ class Task(object):
                             hashes.append(torrent["hash"])
                             self._logger.info(torrent["name"])
                 if hashes:
-                    self._client._request_handler.SetUploadLimit(hashes, speed)
-                    self._logger.info("以上种子被限速{}kb/s".format(speed))
+                    self._client._request_handler.SetUploadLimit(
+                        hashes, int(limit) * 1024
+                    )
+                    self._logger.info("以上种子被限速{}kb/s".format(limit))
         if "ReAnnounce" in self._manage:
             hashes = []
             time = int(self._manage["ReAnnounce"])
@@ -196,7 +197,7 @@ class Task(object):
         try:
             self._manage_downloadingtorrents()
         except:
-            self._logger.error('manage运行失败')
+            self._logger.error("manage运行失败")
 
     # Get remaining torrents (for tester)
     def get_remaining_torrents(self):
