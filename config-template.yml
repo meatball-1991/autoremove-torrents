@@ -27,3 +27,10 @@ tasks:
     delete_data: true #是否删除数据
     strategies: # strategies设置格式未改变，参考 https://autoremove-torrents.readthedocs.io/zh_CN/latest/
       XXXX
+    manage:
+      SetUpLimit:
+        14000: frds
+        100000:
+          - lemon
+          - soulvoice
+      ReAnnounce: 300 
