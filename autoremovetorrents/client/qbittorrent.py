@@ -155,6 +155,30 @@ class qBittorrent(object):
                 params={"hashes": "|".join(torrent_hash_list), "deleteFiles": True},
             )
 
+        # getdownloadingtorrents
+        def GetDownloadingTorrents(self):
+            return self._session.get(
+                self._host + "/api/v2/torrents/info",
+                params={"filter": "downloading", "sort": "progress"},
+                verify=False,
+            ).json()
+
+        # Batch Set torrents upload_limit
+        def SetUploadLimit(self, torrent_hash_list, limit):
+            return self._session.get(
+                self._host + "/api/v2/torrents/setUploadLimit",
+                verify=False,
+                params={"hashes": "|".join(torrent_hash_list), "limit": limit},
+            )
+
+        # Batch ReAnnounce
+        def ReAnnounce(self, torrent_hash_list):
+            return self._session.get(
+                self._host + "/api/v2/torrents/reannounce",
+                params={"hashes": "|".join(torrent_hash_list)},
+                verify=False,
+            )
+
     def __init__(self, host):
         # Logger
         self._logger = logger.Logger.register(__name__)

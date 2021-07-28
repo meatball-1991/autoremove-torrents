@@ -39,6 +39,7 @@ class Task(object):
         self._enabled_remove = remove_torrents
         self._delete_data = conf["delete_data"] if "delete_data" in conf else False
         self._strategies = conf["strategies"] if "strategies" in conf else []
+        self._manage = conf["manage"] if "manage" in conf else []
 
         # Torrents
         self._torrents = set()
@@ -154,6 +155,36 @@ class Task(object):
         # else:  # 否则info记录未删除
         #     self._logger.info("no torrents need to be deleted")
 
+    # manage downloadingtorrents
+    def _manage_downloadingtorrents(self):
+        torrents = self._client._request_handler.GetDownloadingTorrents()
+        if "SetUpLimit" in self._manage:
+            for limit in self._manage["SetUpLimit"]:
+                speed = int(limit) * 1024
+                hashes = []
+                if not isinstance(self._manage["SetUpLimit"][limit], list):
+                    self._manage["SetUpLimit"][limit] = [
+                        self._manage["SetUpLimit"][limit]
+                    ]
+                for torrent in torrents:
+                    if torrent["up_limit"] == -1 or torrent["up_limit"] == 0:
+                        if torrent["category"] in self._manage["SetUpLimit"][limit]:
+                            hashes.append(torrent["hash"])
+                            self._logger.info(torrent["name"])
+                if hashes:
+                    self._client._request_handler.SetUploadLimit(hashes, speed)
+                    self._logger.info("以上种子被限速{}kb/s".format(speed))
+        if "ReAnnounce" in self._manage:
+            hashes = []
+            time = int(self._manage["ReAnnounce"])
+            for torrent in torrents:
+                if torrent["time_active"] < time:
+                    hashes.append(torrent["hash"])
+                    self._logger.info(torrent["name"])
+            if hashes:
+                self._client._request_handler.ReAnnounce(hashes)
+                self._logger.info("以上种子被强制汇报")
+
     # Execute
     def execute(self):
         self._logger.debug("Running task '%s'..." % self._name)
@@ -162,6 +193,10 @@ class Task(object):
         self._apply_strategies()
         if self._enabled_remove:
             self._remove_torrents()
+        try:
+            self._manage_downloadingtorrents()
+        except:
+            self._logger.error('manage运行失败')
 
     # Get remaining torrents (for tester)
     def get_remaining_torrents(self):
