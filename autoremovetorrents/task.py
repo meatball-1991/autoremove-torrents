@@ -210,7 +210,7 @@ class Task(object):
                                 torrent["hash"], id_list
                             )
                             self._logger.info(
-                                "{.2f}gb/{.2f}gb {}".format(
+                                "{:.2f}gb/{:.2f}gb {}".format(
                                     size / 1073741824,
                                     torrent["total_size"] / 1073741824,
                                     torrent["name"],
