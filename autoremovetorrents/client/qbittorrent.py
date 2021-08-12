@@ -179,6 +179,22 @@ class qBittorrent(object):
                 verify=False,
             )
 
+        # get torrent files
+        def GetTorrentFiles(self, torrent_hash):
+            return self._session.get(
+                self._host + "/api/v2/torrents/files",
+                verify=False,
+                params={"hash": torrent_hash},
+            ).json()
+
+        # set torrent files priority
+        def SetTorrentFilesPrio(self, torrent_hash, id_list):
+            return self._session.get(
+                self._host + "/api/v2/torrents/filePrio",
+                verify=False,
+                params={"hash": torrent_hash, "id": "|".join(id_list), "priority": 0},
+            )
+
     def __init__(self, host):
         # Logger
         self._logger = logger.Logger.register(__name__)

@@ -189,6 +189,33 @@ class Task(object):
                     )
             if hashes:
                 self._client._request_handler.ReAnnounce(hashes)
+        if "MaxSize" in self._manage:
+            MaxSize = int(self._manage["MaxSize"]) * 1073741824  # 1024^3 Bit->GB
+            if MaxSize > 0:
+                for torrent in torrents:
+                    if torrent["size"] > MaxSize and torrent["time_active"] < 1800:
+                        ExcludedSize = 0
+                        id_list = []
+                        files = self._client._request_handler.GetTorrentFiles(
+                            torrent["hash"]
+                        )
+                        for file in files:
+                            ExcludedSize += file["size"]
+                            id_list.append(str(file["index"]))
+                            size = torrent["total_size"] - ExcludedSize
+                            if size < MaxSize:
+                                break
+                        if id_list:
+                            self._client._request_handler.SetTorrentFilesPrio(
+                                torrent["hash"], id_list
+                            )
+                            self._logger.info(
+                                "{.2f}gb/{.2f}gb {}".format(
+                                    size / 1073741824,
+                                    torrent["total_size"] / 1073741824,
+                                    torrent["name"],
+                                )
+                            )
 
     # Execute
     def execute(self):
