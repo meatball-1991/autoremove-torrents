@@ -190,32 +190,38 @@ class Task(object):
             if hashes:
                 self._client._request_handler.ReAnnounce(hashes)
         if "MaxSize" in self._manage:
-            MaxSize = int(self._manage["MaxSize"]) * 1073741824  # 1024^3 Bit->GB
-            if MaxSize > 0:
+            for setting in self._manage['MaxSize']:
+                if not isinstance(self._manage['MaxSize'][setting], list):
+                    self._manage['MaxSize'][setting] = [self._manage['MaxSize'][setting]]
+                Categories = self._manage['MaxSize'][setting]
+                temp = setting.split(',')
+                Size = int(temp[0]) * 1073741824  # 1024^3 Bit->GB
+                Ratio = float(temp[1]) / 100
+                if Ratio > 1:
+                    Ratio = 1
                 for torrent in torrents:
-                    if torrent["size"] > MaxSize and torrent["time_active"] < 1800:
-                        ExcludedSize = 0
+                    #MaxSize 取%和设定体积上限的最小值
+                    MaxSize = min([torrent["size"] * Ratio, Size])
+                    threshold = 0.95 * MaxSize
+                    if torrent["category"] in Categories and torrent["time_active"] < 1800 and torrent["size"] > MaxSize:
+                        RemainSize = torrent['size']
                         id_list = []
-                        files = self._client._request_handler.GetTorrentFiles(
-                            torrent["hash"]
-                        )
+                        files = self._client._request_handler.GetTorrentFiles(torrent["hash"])
+                        # files = sorted(files, key=lambda x: x['size'])  #按大小排序
                         for file in files:
-                            ExcludedSize += file["size"]
-                            id_list.append(str(file["index"]))
-                            size = torrent["total_size"] - ExcludedSize
-                            if size < MaxSize:
+                            # 如果去掉当前文件之后<threshold,则不去除该文件，保证remainsize>threshold
+                            if RemainSize - file['size'] > threshold:
+                                RemainSize -= file['size']
+                                id_list.append(str(file["index"]))
+                            if RemainSize < MaxSize:
                                 break
                         if id_list:
-                            self._client._request_handler.SetTorrentFilesPrio(
-                                torrent["hash"], id_list
-                            )
-                            self._logger.info(
-                                "{:.2f}gb/{:.2f}gb {}".format(
-                                    size / 1073741824,
-                                    torrent["total_size"] / 1073741824,
-                                    torrent["name"],
-                                )
-                            )
+                            self._client._request_handler.SetTorrentFilesPrio(torrent["hash"], id_list)
+                            self._logger.info("{:.2f}gb/{:.2f}gb {}".format(
+                                RemainSize / 1073741824,
+                                torrent["total_size"] / 1073741824,
+                                torrent["name"],
+                            ))
 
     # Execute
     def execute(self):
