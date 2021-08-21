@@ -201,7 +201,7 @@ class Task(object):
                     Ratio = 1
                 for torrent in torrents:
                     #MaxSize 取%和设定体积上限的最小值
-                    MaxSize = min([torrent["size"] * Ratio, Size])
+                    MaxSize = min([torrent["total_size"] * Ratio, Size])
                     threshold = 0.95 * MaxSize
                     if torrent["category"] in Categories and torrent["time_active"] < 1800 and torrent["size"] > MaxSize:
                         RemainSize = torrent['size']
