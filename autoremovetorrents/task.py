@@ -222,6 +222,8 @@ class Task(object):
                                 torrent["total_size"] / 1073741824,
                                 torrent["name"],
                             ))
+                        # 开始torrents
+                        self._client._request_handler.ResumeTorrents([torrent["hash"]])
 
     # Execute
     def execute(self):

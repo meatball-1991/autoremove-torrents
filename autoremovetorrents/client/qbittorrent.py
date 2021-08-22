@@ -195,6 +195,14 @@ class qBittorrent(object):
                 params={"hash": torrent_hash, "id": "|".join(id_list), "priority": 0},
             )
 
+        # resume torrents
+        def ResumeTorrents(self, torrent_hash_list):
+            return self._session.get(
+                self._host + "/api/v2/torrents/resume",
+                params={"hashes": "|".join(torrent_hash_list)},
+                verify=False,
+            )
+
     def __init__(self, host):
         # Logger
         self._logger = logger.Logger.register(__name__)
