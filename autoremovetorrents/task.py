@@ -169,18 +169,28 @@ class Task(object):
                     if torrent["up_limit"] == -1 or torrent["up_limit"] == 0:
                         if torrent["category"] in self._manage["SetUpLimit"][limit]:
                             hashes.append(torrent["hash"])
-                            self._logger.info(
-                                "【限速{}kb/s】 {}".format(limit, torrent["name"])
-                            )
+                            self._logger.info("【上传限速{}kb/s】 {}".format(limit, torrent["name"]))
                 if hashes:
                     self._client._request_handler.SetUploadLimit(
                         hashes, int(limit) * 1024
                     )
+        if "SetDownLimit" in self._manage:
+            for limit in self._manage["SetDownLimit"]:
+                hashes = []
+                if not isinstance(self._manage["SetDownLimit"][limit], list):
+                    self._manage["SetDownLimit"][limit] = [self._manage["SetDownLimit"][limit]]
+                for torrent in torrents:
+                    if torrent["dl_limit"] == -1 or torrent["dl_limit"] == 0:
+                        if torrent["category"] in self._manage["SetDownLimit"][limit]:
+                            hashes.append(torrent["hash"])
+                            self._logger.info("【下载限速{}kb/s】 {}".format(limit, torrent["name"]))
+                if hashes:
+                    self._client._request_handler.SetDownloadLimit(hashes, int(limit) * 1024)
         if "ReAnnounce" in self._manage:
             hashes = []
             time = int(self._manage["ReAnnounce"])
             for torrent in torrents:
-                if torrent["time_active"] < time:
+                if torrent["time_active"] < time and torrent["time_active"] > 0:
                     hashes.append(torrent["hash"])
                     self._logger.info(
                         "【强制汇报】【已存在{}s】 {}".format(

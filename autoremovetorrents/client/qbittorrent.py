@@ -171,6 +171,17 @@ class qBittorrent(object):
                 params={"hashes": "|".join(torrent_hash_list), "limit": limit},
             )
 
+        # Batch Set torrents download_limit
+        def SetDownloadLimit(self, torrent_hash_list, limit):
+            return self._session.get(
+                self._host + "/api/v2/torrents/setDownloadLimit",
+                verify=False,
+                params={
+                    "hashes": "|".join(torrent_hash_list),
+                    "limit": limit
+                },
+            )
+
         # Batch ReAnnounce
         def ReAnnounce(self, torrent_hash_list):
             return self._session.get(
