@@ -186,6 +186,18 @@ class Task(object):
                             self._logger.info("【下载限速{}kb/s】 {}".format(limit, torrent["name"]))
                 if hashes:
                     self._client._request_handler.SetDownloadLimit(hashes, int(limit) * 1024)
+        if "SetRatioLimit" in self._manage:
+            for limit in self._manage["SetRatioLimit"]:
+                hashes = []
+                if not isinstance(self._manage["SetRatioLimit"][limit], list):
+                    self._manage["SetRatioLimit"][limit] = [self._manage["SetRatioLimit"][limit]]
+                for torrent in torrents:
+                    if torrent["category"] in self._manage["SetRatioLimit"][limit]:
+                        hashes.append(torrent["hash"])
+                        self._logger.info("【分享率限制{}】 {}".format(limit, torrent["name"]))
+                if hashes:
+                    self._client._request_handler.SetRatioLimit(hashes, limit)
+
         if "ReAnnounce" in self._manage:
             hashes = []
             time = int(self._manage["ReAnnounce"])

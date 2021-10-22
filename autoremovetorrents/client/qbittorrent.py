@@ -182,6 +182,17 @@ class qBittorrent(object):
                 },
             )
 
+        # Batch Set torrents ratio_limit
+        def SetRatioLimit(self, torrent_hash_list, limit):
+            return self._session.get(
+                self._host + "/api/v2/torrents/setShareLimits",
+                verify=False,
+                params={
+                    "hashes": "|".join(torrent_hash_list),
+                    "ratiolimit": limit
+                },
+            )
+
         # Batch ReAnnounce
         def ReAnnounce(self, torrent_hash_list):
             return self._session.get(
