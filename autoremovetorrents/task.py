@@ -192,11 +192,13 @@ class Task(object):
                 if not isinstance(self._manage["SetRatioLimit"][limit], list):
                     self._manage["SetRatioLimit"][limit] = [self._manage["SetRatioLimit"][limit]]
                 for torrent in torrents:
-                    if torrent["category"] in self._manage["SetRatioLimit"][limit]:
-                        hashes.append(torrent["hash"])
-                        self._logger.info("【分享率限制{}】 {}".format(limit, torrent["name"]))
+                    if torrent['max_ratio'] == -1:
+                        if torrent["category"] in self._manage["SetRatioLimit"][limit]:
+                            hashes.append(torrent["hash"])
+                            ratio = '{:.1f}'.format(int(limit) / 10)
+                            self._logger.info("【分享率限制{}】 {}".format(ratio, torrent["name"]))
                 if hashes:
-                    self._client._request_handler.SetRatioLimit(hashes, limit)
+                    self._client._request_handler.SetRatioLimit(hashes, ratio)
 
         if "ReAnnounce" in self._manage:
             hashes = []

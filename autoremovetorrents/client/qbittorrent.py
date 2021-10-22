@@ -189,7 +189,8 @@ class qBittorrent(object):
                 verify=False,
                 params={
                     "hashes": "|".join(torrent_hash_list),
-                    "ratiolimit": limit
+                    "ratioLimit": limit,
+                    "seedingTimeLimit": -1
                 },
             )
 
